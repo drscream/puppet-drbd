@@ -11,4 +11,19 @@ class drbd::package {
   package {$drbd::package:
     ensure  => $package_ensure,
   }
+
+  if ($operatingsystem == 'ubuntu') {
+    package { 'linux-server':
+       ensure  => present,
+       require => Package[$drbd::package],
+    }
+    package { 'linux-virtual':
+       ensure  => purged,
+       require => Package['linux-server'],
+    }
+    package { 'linux-image-virtual':
+       ensure  => purged,
+       require => Package['linux-server'],
+    }
+  }
 }
